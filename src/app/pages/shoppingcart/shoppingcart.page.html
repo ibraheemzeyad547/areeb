@@ -1,0 +1,223 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="headerToolbar">
+    <ion-title><ion-img src="../../assets/imgs/logoTitle.png" class="width50"></ion-img> </ion-title>
+     <ion-item lines="none">
+   		<form style="display: contents;" (ngSubmit)="searchAllValues()">
+        <ion-input placeholder="بحث"  [(ngModel)]="searchValues"  [ngModelOptions]="{standalone: true}" #searchInput></ion-input>
+        <ion-button class="button" type="submit" (click)="searchAllValues()">
+            <ion-icon class="searchButon" name="search" slot="icon-only"></ion-icon>
+        </ion-button>
+        <button style="display: contents;" id="submit" ion-button type="submit" ></button>
+        </form>
+  </ion-item>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+<div>
+<div class="contentDiv">
+	<div class="subContentDiv">
+   
+       <div *ngIf="productInCart==1" class="divEmptyVal">
+            <div class="slideNextDiv" (click)="slideNext()">
+                <ion-icon name="chevron-back-outline" class="slideNexBacktIcon"></ion-icon>
+            </div>
+            <div class="slideNextPrev" (click)="slidePrev()">
+                <ion-icon name="chevron-forward-outline" class="slideNexBacktIcon"></ion-icon>
+            </div>
+            <ion-slides pager="false" autoPlay="true" loop="true" #slides>
+                    <ion-slide *ngFor="let items of returnProductAndStoreCartArray;let i = index" >
+                         <ion-grid class="gridBranchesInformation" *ngIf="items.showLargValues==1">
+                            <ion-row>
+                                <ion-col class="textAlignStart" size="12">
+                                   <div *ngIf="!productsStoreSkeleton" class="productStoreName">{{items.storeName}}</div>
+                                   <div *ngIf="productsStoreSkeleton" class="productStoreName"><ion-skeleton-text animated class="productStoreSkeletonName"></ion-skeleton-text></div>
+                                </ion-col>
+                            </ion-row>
+                            <div *ngFor="let itemsProducts of items.products;let j= index">
+                            <ion-row *ngIf="itemsProducts.showSmallValues==1">
+                                <ion-col class="textAlignStart" size="12">
+                                   <div>
+                                        <div class="productBox">
+                                            <div class="productSubBox">
+                                                <div *ngIf="!productsStoreSkeleton" class="productImageDiv">
+                                                <!--image-->
+                                                     <img src="{{itemsProducts.image}}" class="productImage">
+                                                </div>
+                                                <div *ngIf="productsStoreSkeleton" class="productImageDiv">
+                                                     <img src="../../assets/imgs/def5.png" class="productImage">
+                                                </div>
+                                                <div class="paddingBottom15">
+                                                    <div *ngIf="!productsStoreSkeleton">
+                                                        <div class="productName">{{itemsProducts.productName}}</div>
+                                                         <div class="productPrice">{{itemsProducts.price}} د.أ</div>
+                                                        <div class="productInformation">{{itemsProducts.ingredients}}</div>
+                                                        <div class="productInformation">{{itemsProducts.options}}</div>
+                                                        <div class="productInformation">{{itemsProducts.additions}}</div>
+                                                    </div>
+                                                    <div *ngIf="productsStoreSkeleton">
+                                                        <div class="productName"><ion-skeleton-text animated class="productSkeletonName"></ion-skeleton-text></div>
+                                                        <div class="productInformation"><ion-skeleton-text animated class="productSkeletonInformation"></ion-skeleton-text></div>
+                                                        <div class="productInformation"><ion-skeleton-text animated class="productSkeletonInformation"></ion-skeleton-text></div>
+                                                        <div class="productInformation"><ion-skeleton-text animated class="productSkeletonInformation"></ion-skeleton-text></div>
+                                                        <div class="productInformation"><ion-skeleton-text animated class="productSkeletonInformation"></ion-skeleton-text></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div style="border-top:2px solid"></div>
+                                            <div class="height38">
+                                                 <ion-grid class="gridBranchesInformation">
+                                                    <ion-row>
+                                                        <ion-col class="textAlignStart textBranchesInformation" size="6" style="padding:0px">
+                                                            <div *ngIf="!productsStoreSkeleton" style="height:100%">
+                                                                <div class="pluseDiv" *ngIf="stopeLoading!=0" (click)="functionQuantity(itemsProducts.id,i,j,1)"><ion-icon name="add-outline" class="pluseMinDIcon"></ion-icon></div>
+                                                                <div class="pluseDivStop" *ngIf="stopeLoading==0"><ion-icon name="add-outline" class="pluseMinDIcon"></ion-icon></div>
+                                                                <div  class="priceDiv">{{itemsProducts.quantity}}</div>
+                                                                <div class="minDiv" *ngIf="itemsProducts.quantity !=1 && stopeLoading==1" (click)="functionQuantity(itemsProducts.id,i,j,2)"><ion-icon name="remove-outline" class="pluseMinDIcon"></ion-icon></div>
+                                                                <div class="minDivStop" *ngIf="itemsProducts.quantity==1 && stopeLoading==1" ><ion-icon name="remove-outline" class="pluseMinDIcon"></ion-icon></div>
+                                                                <div class="minDivStop" *ngIf="stopeLoading==0" ><ion-icon name="remove-outline" class="pluseMinDIcon"></ion-icon></div>
+                                                            </div>
+                                                           <div *ngIf="productsStoreSkeleton"><ion-skeleton-text animated class="productSkeletonPrice"></ion-skeleton-text></div>
+                                                        </ion-col>
+                                                        <ion-col class="textAlignEnd" size="6">
+                                                            <div *ngIf="!productsStoreSkeleton" (click)="functionDeletePro(itemsProducts.id,i,j,itemsProducts.type)">
+                                                                <ion-icon name="trash-outline" class="trash"></ion-icon>
+                                                            </div>
+                                                            <div *ngIf="productsStoreSkeleton">
+                                                                <ion-skeleton-text animated class="productSkeletonIcons"></ion-skeleton-text>
+                                                            </div>
+                                                        </ion-col>
+                                                    </ion-row>
+                                                </ion-grid>
+                                            </div>
+                                        </div>
+                                     </div>
+                                </ion-col>
+                            </ion-row>
+                            </div>
+                            <ion-row>
+                                <ion-col class="textAlignStart" size="12">
+                                   <div>
+                                        <div class="productPriceBox">
+                                            <div class="productPriceSubBox">
+                                                 <ion-grid class="gridBranchesInformation">
+                                                    <ion-row>
+                                                        <ion-col class="textAlignStart textBranchesInformation" size="6" style="padding:0px">
+                                                           <div *ngIf="showDelvaryPriceOfVal==0 && !productsStoreSkeleton">
+                                                                <div>
+                                                                 <ion-radio-group (ionChange)="getTheOptions($event,i,items.id,items.id,items.allPrice)"  value="{{selectPriceValues}}">
+                                                                    <ion-item class="cardItem" lines="none" *ngIf="items.deliveryAnotherTime!=0">
+                                                                        <ion-label  class="radioSelectLabel">اتوصيل خلال {{items.deliveryAnotherTime}}<br> سعر التوصيل {{items.deliveryAnotherPrice}} د.أ</ion-label>
+                                                                        <ion-radio slot="start" id="radioPro" mode="ios" value="2"></ion-radio>
+                                                                    </ion-item>
+                                                                    <ion-item class="cardItem" lines="none" *ngIf="items.deliveryTime!=0">
+                                                                        <ion-label class="radioSelectLabel">توصيل سريع {{items.deliveryTime}}<br> سعر التوصيل {{items.deliveryPrices}} د.أ</ion-label>
+                                                                        <ion-radio slot="start" id="radioPro" mode="ios" value="1"></ion-radio>
+                                                                    </ion-item>
+                                                                  </ion-radio-group>
+                                                                </div>
+                                                            </div>
+                                                           <div *ngIf="showDelvaryPriceOfVal==0 && productsStoreSkeleton">
+                                                               <div class="productdeleverAndTim" *ngIf="items.deliveryAnotherTime!=0 && items.deliveryAnotherPrice!=0"> <ion-skeleton-text animated class="productSkeletonPrice"></ion-skeleton-text></div>
+                                                               <div class="productdeleverAndTim" *ngIf="items.deliveryTime!=0 && items.deliveryPrices!=0"> <ion-skeleton-text animated class="productSkeletonPrice"></ion-skeleton-text></div>
+                                                           </div>
+                                                        </ion-col>
+                                                        <ion-col class="textAlignEnd" size="6">
+                                                         <div *ngIf="!productsStoreSkeleton && items.taxPrice !=0">
+                                                                <div class="productAllPrice" style="font-size:11px">ضريبة ورسوم إضافية {{items.taxPrice}} د.أ</div>
+                                                            </div>
+                                                           <div *ngIf="!productsStoreSkeleton">
+                                                                <div class="productAllPrice" style="padding-top:15px">السعر الكلي {{items.allPrice}} د.أ</div>
+                                                            </div>
+                                                            <div *ngIf="productsStoreSkeleton  && items.taxPrice !=0">
+                                                               <div class="productAllPrice"> <ion-skeleton-text animated class="productSkeletonPrice" style="float:left"></ion-skeleton-text></div>
+                                                           </div>
+                                                           <div *ngIf="productsStoreSkeleton">
+                                                               <div class="productAllPrice" style="padding-top:15px"> <ion-skeleton-text animated class="productSkeletonPrice" style="float:left"></ion-skeleton-text></div>
+                                                           </div>
+                                                        </ion-col>
+                                                    </ion-row>
+                                                     <ion-row>
+                                                        <ion-col class="textAlignEnd" size="12">
+                                                           <div *ngIf="!productsStoreSkeleton">
+                                                                <div class="productAllPrice" style="padding-right:0px">
+                                                                    <div *ngIf="!productsStoreSkeleton">
+                                                                        <ion-button style="width:100%; margin:0px; border-radius:5px" class="oneButtonDelInf fontSize15" id="submit" (click)="contactInformation()"><span class="paddingBottom5">معلومات التوصيل</span></ion-button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div *ngIf="productsStoreSkeleton">
+                                                               <div class="productAllPrice" style="padding-right:0px"> <ion-skeleton-text animated class="productSkeletonPrice" style="float:left"></ion-skeleton-text></div>
+                                                           </div>
+                                                        </ion-col>
+                                                    </ion-row>
+                                                     <ion-row>
+                                                        <ion-col class="textAlignStart textBranchesInformation" size="12" style="padding:0px">
+                                                            <div *ngIf="!productsStoreSkeleton">
+                                                                <ion-item lines="none" class="itemDiscount">
+                                                                    <ion-label position="fixed" class="labelDiscount">كود الخصم</ion-label>
+                                                                    <ion-input type="text" class="inputDiscount" [(ngModel)]="discountCode"></ion-input>
+                                                            		<ion-button class="oneButtonDisc fontSize15" id="submit"  (click)="checkValBeforAddValues(items.id,i,items.allPrice)"><span class="paddingBottom5">تأكيد</span></ion-button>
+                                                                </ion-item>
+                                                            </div>
+                                                           <div *ngIf="productsStoreSkeleton">
+                                                               <div class="productdeleverAndTim"> <ion-skeleton-text animated class="productSkeletonPrice"></ion-skeleton-text></div>
+                                                           </div>
+                                                        </ion-col>
+                                                    </ion-row>
+                                                </ion-grid>
+                                            </div>
+                                        </div>
+                                     </div>
+                                </ion-col>
+                            </ion-row>
+                              <ion-row>
+                                <ion-col class="textAlignStart" size="12">
+                                   <div class="divButtonClass" *ngIf="!productsStoreSkeleton">
+                                    <ion-button class="oneButtonCart fontSize15" id="submit" (click)="addValuesToServer(items.id,i)"><span class="paddingBottom5">{{items.allPrice}} د.أ  إتمام عملية الشراء</span></ion-button>  <ion-button class="oneButton fontSize15" id="submit" (click)="functionDeleteAll(items.id,i)"><span class="paddingBottom5">إلغاء</span></ion-button>
+                                  </div>
+                                  <div class="divButtonClassSkeleton" *ngIf="productsStoreSkeleton">
+                                    <ion-skeleton-text animated class="productSkeletonButton"></ion-skeleton-text>
+                                  </div>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-slide>
+                </ion-slides>
+       </div>
+       <div *ngIf="productInCart==0" class="divEmptyVal" style=" padding-top: 120px;">
+            <div>
+                <img src="../../assets/imgs/noProduct.png" style="width:150px; height:150px">
+            </div>
+            <div class="emptyFirstText">
+                عذرا! لا يوجد عناصر في سلة الشراء حاليا
+            </div>
+            <div class="emptyLastText">
+                لم يتم إضافة اي بيانات على هذه الشاشة حاليا
+            </div>
+        </div>
+	</div>
+</div>
+</ion-content>
+<ion-footer class="ion-no-border">
+<ion-toolbar class="footerToolbar">
+	<div class="width100">
+        <div class="menueClass" (click)="functionGoToHome()">
+        	<div><ion-icon name="home" slot="start"></ion-icon></div>
+            <div class="labelClass">الرئيسية</div>
+        </div>
+           <div class="menueClass" (click)="functionGoToStores()">
+        	<div><ion-icon name="storefront" slot="start"></ion-icon></div>
+            <div class="labelClass">المتاجر</div>
+        </div>
+        <div class="menueClass menueClassActive">
+        	<div><ion-icon name="cart" slot="start"></ion-icon></div>
+            <ion-badge slot="start" mode='ios'>{{productInShopingCart}}</ion-badge>
+            <div class="labelClass">سلة الشراء</div>
+        </div>
+        <div class="menueClass" (click)="functionOpenMenue()">
+        	<div><ion-icon name="list" slot="start"></ion-icon></div>
+            <div class="labelClass">قائمتي</div>
+        </div>
+    </div>
+</ion-toolbar>
+</ion-footer>
